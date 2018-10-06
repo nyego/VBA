@@ -1,0 +1,32 @@
+Sub Easy()
+
+For Each ws In Worksheets
+   
+   ws.Range("I1") = "Ticker"
+   ws.Range("J1") = "Total Stock Volume"
+
+   LastRow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+
+   If IsEmpty(ws.Range("I2:J" & LastRow).Value) = False Then
+       ws.Range("I2:J" & LastRow).ClearContents
+   End If
+
+   ws.Range("a2:a" & LastRow).AdvancedFilter Action:=xlFilterCopy, Copytorange:=ws.Range("I2"), Unique:=True
+
+   If ws.Range("I2") = ws.Range("I3") Then
+       ws.Range("I2").Delete shift:=xlUp
+   End If
+
+   LastRow2 = ws.Cells(Rows.Count, "I").End(xlUp).Row
+
+   Dim VolumeSum
+
+   For i = 2 To LastRow2
+       
+       VolumeSum = Application.WorksheetFunction.SumIfs(ws.Range("g2:g" & LastRow), ws.Range("a2:a" & LastRow), ws.Cells(i, "I"))
+       ws.Cells(i, "J").Value = VolumeSum
+
+   Next i
+
+Next
+End Sub
